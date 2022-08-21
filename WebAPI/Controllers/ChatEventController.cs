@@ -20,6 +20,12 @@ public class ChatEventController : ControllerBase
     public IActionResult Get(DateTime from, DateTime to)
     {
         var chatEvents = _chatEventService.Fetch(from, to);
+
+        if (!chatEvents.Any())
+        {
+            return NotFound();
+        }
+        
         return Ok(chatEvents);
     }
     
@@ -27,6 +33,12 @@ public class ChatEventController : ControllerBase
     public IActionResult GetAggregated(DateTime from, DateTime to, TimeSpan interval)
     {
         var chatEvents = _chatEventService.FetchAndAggregate(from, to, interval);
+
+        if (!chatEvents.Any())
+        {
+            return NotFound();
+        }
+        
         return Ok(chatEvents);
     }
     

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Dtos;
 using Domain.Entities;
 
@@ -72,14 +71,14 @@ public class ChatEventService : IChatEventService
         _chatEventStorage.Add(chatEvent);
     }
 
-    public IList<AggregatedChatEventsGroupedByOccuredAtDto> FetchAndAggregate(DateTime from, DateTime to, TimeSpan timeSpan)
+    public IList<AggregatedChatEventsGroupedByOccuredAtDto> FetchAndAggregate(DateTime from, DateTime to, TimeSpan interval)
     {
         var chatEvents = Fetch(from, to);
 
-        var aggregatedChatEvents = chatEvents.GroupBy(chatEvent => chatEvent.OccuredAt.Ticks / timeSpan.Ticks)
+        var aggregatedChatEvents = chatEvents.GroupBy(chatEvent => chatEvent.OccuredAt.Ticks / interval.Ticks)
             .Select(group => new AggregatedChatEventsGroupedByOccuredAtDto
             {
-                OccuredAt = new DateTime(group.Key * timeSpan.Ticks),
+                OccuredAt = new DateTime(group.Key * interval.Ticks),
                 ChatEventsGroupedByEventType = group.GroupBy(message => message.EventType).
                     Select(eventGroup => new ChatEventsAggregatedByEventType()
                     {
