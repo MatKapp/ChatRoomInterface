@@ -1,3 +1,11 @@
-﻿namespace Domain.Entities;
+﻿using Application.Common.Models;
 
-public class LeaveRoom : ChatEvent { }
+namespace Domain.Entities;
+
+public class LeaveRoom : ChatEvent
+{
+    public override ChatEventType EventType => ChatEventType.LeaveRoom;
+    
+    public override string GenerateMessage()
+        => $"{UserName} leaves";
+}

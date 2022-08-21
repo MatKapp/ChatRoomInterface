@@ -2,9 +2,8 @@
 
 namespace Application.Dtos;
 
-public class ChatEventDto
+public class ChatEventsAggregatedByEventType
 {
-    public DateTime OccuredAt { get; set; }
-    public string Message { get; set; }
     public ChatEventType EventType { get; set; }
+    public IList<string> Messages { get; set; }
 }

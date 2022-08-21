@@ -23,6 +23,13 @@ public class ChatEventController : ControllerBase
         return Ok(chatEvents);
     }
     
+    [HttpGet("Aggregated")]
+    public IActionResult GetAggregated(DateTime from, DateTime to, TimeSpan interval)
+    {
+        var chatEvents = _chatEventService.FetchAndAggregate(from, to, interval);
+        return Ok(chatEvents);
+    }
+    
     [HttpPost("EnterRoom")]
     public IActionResult EnterRoom(string userName)
     {

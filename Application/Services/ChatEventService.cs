@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Diagnostics;
+using Application.Common.Interfaces;
 using Application.Dtos;
 using Domain.Entities;
 
@@ -20,7 +21,8 @@ public class ChatEventService : IChatEventService
             .Select(chatEvent => new ChatEventDto
             {
                 OccuredAt = chatEvent.OccuredAt,
-                Message = chatEvent.ToString()
+                Message = chatEvent.GenerateMessage(),
+                EventType = chatEvent.EventType
             }).ToList();
 
     public void AddEnterRoom(string userName)
@@ -70,15 +72,20 @@ public class ChatEventService : IChatEventService
         _chatEventStorage.Add(chatEvent);
     }
 
-    public IList<AggregatedChatEventDto> Aggregate(DateTime from, DateTime to, TimeSpan timeSpan)
+    public IList<AggregatedChatEventsGroupedByOccuredAtDto> FetchAndAggregate(DateTime from, DateTime to, TimeSpan timeSpan)
     {
         var chatEvents = Fetch(from, to);
 
         var aggregatedChatEvents = chatEvents.GroupBy(chatEvent => chatEvent.OccuredAt.Ticks / timeSpan.Ticks)
-            .Select(group => new AggregatedChatEventDto
+            .Select(group => new AggregatedChatEventsGroupedByOccuredAtDto
             {
                 OccuredAt = new DateTime(group.Key * timeSpan.Ticks),
-                ChatEventMessages = group.Select(test => test.Message).ToList()
+                ChatEventsGroupedByEventType = group.GroupBy(message => message.EventType).
+                    Select(eventGroup => new ChatEventsAggregatedByEventType()
+                    {
+                        EventType = eventGroup.Key,
+                        Messages = eventGroup.Select(chatEvent => chatEvent.Message).ToList()
+                    }).ToList()
             }).ToList();
 
         return aggregatedChatEvents;

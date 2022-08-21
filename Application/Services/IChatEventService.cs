@@ -10,5 +10,5 @@ public interface IChatEventService
     void AddLeaveRoom(string userName);
     void AddComment(string userName, string message);
     void AddHighFive(string userName, string receiverName);
-    IList<AggregatedChatEventDto> Aggregate(DateTime from, DateTime to, TimeSpan timeSpan);
+    IList<AggregatedChatEventsGroupedByOccuredAtDto> FetchAndAggregate(DateTime from, DateTime to, TimeSpan timeSpan);
 }

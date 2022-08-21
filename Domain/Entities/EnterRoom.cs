@@ -1,3 +1,11 @@
-﻿namespace Domain.Entities;
+﻿using Application.Common.Models;
 
-public class EnterRoom : ChatEvent { }
+namespace Domain.Entities;
+
+public class EnterRoom : ChatEvent
+{
+    public override ChatEventType EventType => ChatEventType.EnterRoom;
+    
+    public override string GenerateMessage()
+        => $"{UserName} enters the room";
+}
